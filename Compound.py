@@ -62,7 +62,11 @@ class Clip:
 		return self.item.GetMediaPoolItem()
 
 	def get_name(self):
-		return self.item.GetName()
+		if self.isMedia():
+			media = self.getMedia()
+			return media.GetClipProperty('File Name')
+		else:
+			return self.item.GetName()
 
 	# returns fps of self
 	# input: none
