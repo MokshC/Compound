@@ -49,13 +49,14 @@ class Clip:
 	# all this class needs is a timeline item
 	def __init__(self, tl_item):
 		self.item = tl_item
-
+		self.media = self.getMedia()
+		self.isMedia = self.isMedia()
+		
 	# confirms self is in the mediapool and not a redx or 2pop
 	# input: none
 	# output: Bool
 	def isMedia(self):
-		media = self.getMedia()
-		if media == None:
+		if self.media == None:
 			return False
 		else:
 			return True
@@ -68,7 +69,7 @@ class Clip:
 			return None
 
 	def get_name(self):
-		if self.isMedia():
+		if self.isMedia:
 			media = self.getMedia()
 			return self.filename()
 		else:
@@ -81,9 +82,8 @@ class Clip:
 	# input: none
 	# output: float
 	def fps(self):
-		if self.isMedia():
-			media = self.getMedia()
-			numb = float(media.GetClipProperty('FPS'))
+		if self.isMedia:
+			numb = float(self.media.GetClipProperty('FPS'))
 		else:
 			numb = float(23.976)
 		return numb
@@ -92,8 +92,7 @@ class Clip:
 	# input: none
 	# output: Bool
 	def dropframe(self):
-		media = self.getMedia()
-		drop = media.GetClipProperty('Drop frame')
+		drop = self.media.GetClipProperty('Drop frame')
 		if drop == "0":
 			return False
 		else:
@@ -103,9 +102,8 @@ class Clip:
 	# input: none
 	# output: int
 	def mediaStartFrame(self):
-	
-		media = self.getMedia()
-		tc = media.GetClipProperty('Start TC')	# this is in ##:##:##:## format
+
+		tc = self.media.GetClipProperty('Start TC')	# this is in ##:##:##:## format
 		
 		# check to see if framerate is matching
 		if int(tc[9:]) > self.fps():
@@ -167,9 +165,8 @@ class Clip:
 	# input: none
 	# output: str or None
 	def filename(self):
-		if self.isMedia():
-			media = self.getMedia()
-			return media.GetClipProperty('File Name')
+		if self.isMedia:
+			return self.media.GetClipProperty('File Name')
 		else:
 			return None
 		
@@ -184,7 +181,7 @@ def main():
 	clip = Clip(tlItem)
 	name = clip.get_name()
 	
-	if clip.isMedia():
+	if clip.isMedia:
 		start = clip.start_tc()
 		tl.CreateCompoundClip([tlItem], {"startTimecode" : start, "name" : "_" + name})
 	else:
