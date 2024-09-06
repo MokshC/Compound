@@ -1,4 +1,6 @@
-# Moksh
+# Made by Moksh Chitkara
+# This script is open source under the GPL-3.0 License
+# please see https://github.com/MokshC/Compound for more information
 # -*- coding: utf-8 -*-
 
 import os
