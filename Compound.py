@@ -54,28 +54,35 @@ class Clip:
 	# input: none
 	# output: Bool
 	def isMedia(self):
-		media = self.item.GetMediaPoolItem()
+		media = self.getMedia()
 		if media == None:
 			return False
 		else:
 			return True
 			
 	def getMedia(self):
-		return self.item.GetMediaPoolItem()
+		try:
+			return self.item.GetMediaPoolItem()
+		except:
+			print("No timeline item found")
+			return None
 
 	def get_name(self):
 		if self.isMedia():
 			media = self.getMedia()
-			return media.GetClipProperty('File Name')
+			return self.filename()
 		else:
-			return self.item.GetName()
+			try:
+				return self.item.GetName()
+			except:
+				return "Compound Clip"
 
 	# returns fps of self
 	# input: none
 	# output: float
 	def fps(self):
 		if self.isMedia():
-			media = self.item.GetMediaPoolItem()
+			media = self.getMedia()
 			numb = float(media.GetClipProperty('FPS'))
 		else:
 			numb = float(23.976)
@@ -85,7 +92,7 @@ class Clip:
 	# input: none
 	# output: Bool
 	def dropframe(self):
-		media = self.item.GetMediaPoolItem()
+		media = self.getMedia()
 		drop = media.GetClipProperty('Drop frame')
 		if drop == "0":
 			return False
@@ -97,7 +104,7 @@ class Clip:
 	# output: int
 	def mediaStartFrame(self):
 	
-		media = self.item.GetMediaPoolItem()
+		media = self.getMedia()
 		tc = media.GetClipProperty('Start TC')	# this is in ##:##:##:## format
 		
 		# check to see if framerate is matching
@@ -161,7 +168,7 @@ class Clip:
 	# output: str or None
 	def filename(self):
 		if self.isMedia():
-			media = self.item.GetMediaPoolItem()
+			media = self.getMedia()
 			return media.GetClipProperty('File Name')
 		else:
 			return None
@@ -175,7 +182,6 @@ def main():
 
 	tlItem = timeline.GetCurrentVideoItem() # get clip
 	clip = Clip(tlItem)
-	start = clip.start_tc()
 	name = clip.get_name()
 	
 	if clip.isMedia():
